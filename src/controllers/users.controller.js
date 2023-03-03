@@ -28,4 +28,10 @@ authRouter.patch(
   authenticateWithJWT,
   AuthService.updateUserOrAdmin
 );
+authRouter.get(
+  "/getUserById/:userId",
+  authenticateWithJWT,
+  AuthService.getUserById
+);
+authRouter.get("/getAllUsers", authenticateWithJWT, AuthService.getAllUsers);
 export default authRouter;
