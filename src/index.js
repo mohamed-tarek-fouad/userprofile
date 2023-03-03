@@ -6,9 +6,13 @@ import authRouter from "./controllers/users.controller.js";
 import registerStrategies from "./helpers/functions/registerStratigies.js";
 import { CronJob } from "cron";
 import { join } from "path";
+import cors from "cors";
 const prisma = new PrismaClient();
 dotenv.config();
-
+const corsOptions = {
+  origin: "http://localhost:3001/",
+  optionsSuccessStatus: 200,
+};
 const app = express();
 registerStrategies();
 
@@ -16,7 +20,7 @@ registerStrategies();
 app.use(express.json());
 app.use("/uploads", express.static(join(process.cwd(), "uploads")));
 // -- Routes --
-app.use("/auth", authRouter);
+app.use("/auth", cors(corsOptions), authRouter);
 
 app.use(errorHandler);
 
