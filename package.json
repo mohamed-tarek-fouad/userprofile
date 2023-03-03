@@ -1,0 +1,37 @@
+{
+	"name": "profile_mangment",
+	"type": "module",
+	"version": "1.0.0",
+	"description": "This is used for education purposes",
+	"main": "index.js",
+	"scripts": {
+		"start": "nodemon src/index.js",
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"lint": "eslint src --fix",
+		"prettier": "prettier --write src/**/*.js",
+		"generate": "prisma generate",
+		"migrate": "npm run generate && prisma migrate dev"
+	},
+	"author": "mohamed tarek",
+	"license": "ISC",
+	"dependencies": {
+		"@prisma/client": "^4.4.0",
+		"bcrypt": "^5.0.1",
+		"cron": "^2.1.0",
+		"dotenv": "^16.0.3",
+		"express": "^4.18.1",
+		"joi": "^17.6.1",
+		"joi-password": "^4.0.0",
+		"jsonwebtoken": "^8.5.1",
+		"passport": "^0.6.0",
+		"passport-jwt": "^4.0.0"
+	},
+	"devDependencies": {
+		"eslint": "^8.24.0",
+		"eslint-config-prettier": "^8.5.0",
+		"eslint-plugin-prettier": "^4.2.1",
+		"nodemon": "^2.0.20",
+		"prettier": "^2.7.1",
+		"prisma": "^4.4.0"
+	}
+}
