@@ -5,10 +5,10 @@ import {
 } from "../../helpers/functions/ResponseHandler.js";
 import { prisma } from "../../index.js";
 import bcrypt from "bcrypt";
-import createAccessToken from "../../helpers/functions/createAccessToken.js";
-export async function register(req, res, next) {
+export async function addUserOrAdmin(req, res, next) {
   try {
-    const {
+    const loggedInUser = req.user;
+    let {
       email,
       password,
       firstname,
@@ -16,14 +16,16 @@ export async function register(req, res, next) {
       middlename,
       department,
       confirmPassword,
+      role,
     } = req.body;
+    if (loggedInUser.role === "user") role = "user";
     if (password !== confirmPassword) {
       return badRequestResponse(
         res,
         "confirm password is not the same as password"
       );
     }
-    const checkEmail = await prisma.user.findUnique({
+    const checkEmail = await prisma.User.findUnique({
       where: {
         email,
       },
@@ -32,7 +34,7 @@ export async function register(req, res, next) {
       return conflictResponse(res, "Email already exists");
     }
     const encryptedPassword = await bcrypt.hash(password, 10);
-    const newUser = await prisma.user.create({
+    const newUser = await prisma.User.create({
       data: {
         email,
         password: encryptedPassword,
@@ -42,17 +44,9 @@ export async function register(req, res, next) {
         middlename,
       },
     });
-    const newToken = await prisma.tokens.create({
-      data: {
-        userId: newUser.id,
-        expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24),
-      },
-    });
-    const accessToken = createAccessToken(newUser.id, newToken.id);
     delete newUser.password;
     return okResponse(res, "User created successfully", {
       ...newUser,
-      accessToken,
     });
   } catch (err) {
     next(err);
